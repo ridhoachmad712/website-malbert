@@ -10,8 +10,8 @@
    (App\Support\PaletWarna); nilai di :root di bawah adalah palet bawaan Jingga. */
 @theme {
     --font-sans: 'Nunito', ui-sans-serif, system-ui, sans-serif;
-    --color-krem: #fffaf3;
-    --color-garis: #ece3d6;
+    --color-abu: #f5f6f8;
+    --color-garis: #e5e7eb;
 }
 
 @theme inline {
@@ -44,7 +44,7 @@
     }
 
     body {
-        @apply bg-krem text-slate-800 antialiased;
+        @apply bg-abu text-slate-800 antialiased;
     }
 
     :focus-visible {
@@ -141,7 +141,7 @@
     }
 
     .menu-turun a {
-        @apply flex min-h-11 items-center rounded-lg px-3 text-sm font-bold text-slate-700 hover:bg-krem;
+        @apply flex min-h-11 items-center rounded-lg px-3 text-sm font-bold text-slate-700 hover:bg-abu;
     }
 
     .menu-turun a[aria-current='page'] {

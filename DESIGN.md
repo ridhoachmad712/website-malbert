@@ -1,6 +1,6 @@
 # Pedoman Desain Website SDI Malbert
 
-Acuan tetap untuk setiap perubahan tampilan. Bersaudara dengan pedoman TEBAK AKSI (kertas krem, tinta gelap, satu warna aksen), tetapi dengan identitas sekolah. Setiap keputusan visual punya alasan; hiasan tanpa fungsi tidak dipakai.
+Acuan tetap untuk setiap perubahan tampilan. Latar putih dan abu lembut, tinta gelap, satu warna aksen. Setiap keputusan visual punya alasan; hiasan tanpa fungsi tidak dipakai.
 
 ## Arah
 
@@ -17,9 +17,9 @@ Setiap layar punya **satu titik fokus**. Beranda: hero berfoto, lalu kabar sekol
 
 | Peran | Token | Dipakai untuk |
 |---|---|---|
-| Dasar | `krem` `#fffaf3` | Latar halaman |
+| Dasar | `abu` `#f5f6f8` | Latar halaman (abu lembut netral). **Jangan memakai krem `#fffaf3`.** |
 | Permukaan | `white` | Panel dan kartu |
-| Garis | `garis` `#ece3d6` | Batas panel, pemisah baris |
+| Garis | `garis` `#e5e7eb` | Batas panel, pemisah baris |
 | Tinta | `slate-800`/`slate-900` | Teks utama dan judul |
 | Teks pendukung | `slate-600` | Keterangan. **Jangan memakai `slate-400` untuk teks.** |
 | Aksen | `brand-700` | Tombol utama, menu aktif, tautan, nomor langkah. Hanya untuk tindakan dan penanda, bukan hiasan. |
@@ -30,7 +30,7 @@ Admin memilih aksen dari palet yang sudah diuji kontras (`App\Support\PaletWarna
 ## Beranda
 
 - **Hero**: satu foto selebar layar (tanpa slider) dengan **lapisan gelap rata** `slate-950/60` agar tulisan putih terbaca. Lapisan ini bukan gradasi. Tanpa foto, hero berlatar `slate-900` polos dengan logo sekolah.
-- **Ritme latar**: bagian bergantian krem dan putih selebar layar (dibatasi garis atas-bawah). Program TEBAK AKSI satu-satunya **pita gelap** `slate-900`.
+- **Ritme latar**: bagian bergantian abu lembut dan putih selebar layar (dibatasi garis atas-bawah). Program TEBAK AKSI satu-satunya **pita gelap** `slate-900`.
 - **Kepala bagian** seragam (`x-kepala-bagian`): label kecil berwarna aksen, judul, dan tautan "Lihat semua". Label dan judul diatur admin.
 - **Carousel guru**: digeser manual (jari, tombol, papan ketik), **tanpa putar otomatis**, sesuai WCAG 2.2.2.
 - **Foto pengganti** untuk berita atau prestasi tanpa gambar: logo sekolah di atas `brand-50`, bukan foto stok.

@@ -22,14 +22,14 @@
             <aside>
                 <h2 class="font-extrabold text-slate-900">Profil lainnya</h2>
                 <nav class="mt-3 kartu p-2" aria-label="Halaman profil">
-                    <a href="{{ route('profil') }}" class="flex min-h-11 items-center rounded-lg px-3 text-sm font-bold text-slate-700 hover:bg-krem">Identitas dan sambutan</a>
+                    <a href="{{ route('profil') }}" class="flex min-h-11 items-center rounded-lg px-3 text-sm font-bold text-slate-700 hover:bg-abu">Identitas dan sambutan</a>
                     @foreach ($lainnya as $item)
                         <a href="{{ route('halaman', $item->slug) }}" @if ($item->id === $halaman->id) aria-current="page" @endif
                            @class(['flex min-h-11 items-center rounded-lg px-3 text-sm font-bold',
                                'bg-brand-50 text-brand-800' => $item->id === $halaman->id,
-                               'text-slate-700 hover:bg-krem' => $item->id !== $halaman->id])>{{ $item->judul }}</a>
+                               'text-slate-700 hover:bg-abu' => $item->id !== $halaman->id])>{{ $item->judul }}</a>
                     @endforeach
-                    <a href="{{ route('guru') }}" class="flex min-h-11 items-center rounded-lg px-3 text-sm font-bold text-slate-700 hover:bg-krem">Guru dan tenaga kependidikan</a>
+                    <a href="{{ route('guru') }}" class="flex min-h-11 items-center rounded-lg px-3 text-sm font-bold text-slate-700 hover:bg-abu">Guru dan tenaga kependidikan</a>
                 </nav>
             </aside>
         @endif

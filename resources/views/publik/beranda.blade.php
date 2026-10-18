@@ -1,7 +1,7 @@
 @use('App\Models\Pengaturan')
 
 @php
-    // Ritme latar: bagian terang bergantian krem dan putih; Program TEBAK AKSI selalu pita gelap
+    // Ritme latar: bagian terang bergantian abu lembut dan putih; Program TEBAK AKSI selalu pita gelap
     $putih = false;
 @endphp
 

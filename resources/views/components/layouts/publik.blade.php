@@ -18,7 +18,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#fffaf3">
+    <meta name="theme-color" content="#ffffff">
     <title>{{ $judul ? $judul.' · '.Pengaturan::ambil('nama_singkat') : $namaSekolah }}</title>
     <meta name="description" content="{{ \Illuminate\Support\Str::limit(strip_tags((string) $deskripsi), 160) }}">
     <link rel="canonical" href="{{ request()->url() }}">
