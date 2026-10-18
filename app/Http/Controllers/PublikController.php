@@ -35,7 +35,7 @@ class PublikController extends Controller
             'guru' => $ambil('guru', fn () => Guru::tampil()->get()),
             'agenda' => $ambil('agenda', fn () => Agenda::mendatang()->limit(4)->get()),
             'prestasi' => $ambil('prestasi', fn () => Prestasi::terbit()->latest('tanggal')->limit(3)->get()),
-            'album' => $ambil('galeri', fn () => Album::terbit()->has('foto')->with('sampul')->withCount('foto')->latest('tanggal')->limit(5)->get()),
+            'album' => $ambil('galeri', fn () => Album::terbit()->has('foto')->denganSampul()->withCount('foto')->latest('tanggal')->limit(5)->get()),
             'jumlahGuru' => Guru::where('tampil', true)->count(),
         ];
 
@@ -125,7 +125,7 @@ class PublikController extends Controller
     {
         return view('publik.galeri', [
             'album' => Album::terbit()->where(fn ($query) => $query->has('foto')->orWhereNotNull('video_youtube'))
-                ->with('sampul')->withCount('foto')->latest('tanggal')->paginate(12),
+                ->denganSampul()->withCount('foto')->latest('tanggal')->paginate(12),
         ]);
     }
 

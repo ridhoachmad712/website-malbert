@@ -7,6 +7,7 @@ use App\Filament\Pages\Spmb;
 use App\Filament\Pages\TampilanBeranda;
 use App\Filament\Resources\AlbumResource\Pages\CreateAlbum;
 use App\Filament\Resources\AlbumResource\Pages\EditAlbum;
+use App\Filament\Resources\AlbumResource\RelationManagers\FotoRelationManager;
 use App\Filament\Resources\BeritaResource\Pages\CreateBerita;
 use App\Filament\Resources\GuruResource\Pages\CreateGuru;
 use App\Filament\Support\HapusAman;
@@ -150,6 +151,45 @@ class PanelAdminTest extends TestCase
         $foto = $album->foto()->first();
         $foto->delete();
         Storage::disk('public')->assertMissing($foto->path);
+    }
+
+    public function test_admin_memilih_foto_sampul_album(): void
+    {
+        Storage::fake('public');
+        $album = Album::create(['judul' => 'Album Sampul', 'terbit' => true, 'foto_diperiksa' => true]);
+        $pertama = $album->foto()->create(['path' => 'galeri/pertama.jpg', 'urutan' => 1]);
+        $kedua = $album->foto()->create(['path' => 'galeri/kedua.jpg', 'urutan' => 2]);
+
+        $this->assertTrue($album->fresh()->sampul->is($pertama), 'Tanpa pilihan, sampul memakai foto pertama');
+
+        $daftarFoto = Livewire::test(FotoRelationManager::class, ['ownerRecord' => $album, 'pageClass' => EditAlbum::class]);
+
+        // Tombol benar-benar tergambar di kartu foto (bukan hanya terdaftar), dan hanya untuk foto yang belum jadi sampul
+        // (satu kemunculan di keterangan tabel, satu lagi tombol pada foto kedua)
+        $this->assertSame(2, substr_count($daftarFoto->html(), 'Jadikan sampul'));
+
+        $daftarFoto->callTableAction('jadikanSampul', $kedua)->assertHasNoErrors();
+
+        $this->assertSame($kedua->id, $album->fresh()->sampul_foto_id);
+        $this->get('/galeri')->assertSee('galeri/kedua')->assertDontSee('galeri/pertama');
+
+        // Foto sampul dihapus: kembali memakai foto pertama, tanpa galat
+        $kedua->delete();
+        $this->assertNull($album->fresh()->sampul_foto_id);
+        $this->assertTrue($album->fresh()->sampul->is($pertama));
+        $this->get('/galeri')->assertOk()->assertSee('galeri/pertama');
+    }
+
+    public function test_foto_album_lain_tidak_dipakai_sebagai_sampul(): void
+    {
+        $album = Album::create(['judul' => 'Album A', 'terbit' => true, 'foto_diperiksa' => true]);
+        $lain = Album::create(['judul' => 'Album B', 'terbit' => true, 'foto_diperiksa' => true]);
+        $milikA = $album->foto()->create(['path' => 'galeri/a.jpg']);
+        $milikB = $lain->foto()->create(['path' => 'galeri/b.jpg']);
+
+        $album->update(['sampul_foto_id' => $milikB->id]);
+
+        $this->assertTrue($album->fresh()->sampul->is($milikA));
     }
 
     public function test_album_tidak_bisa_tampil_sebelum_foto_diperiksa(): void

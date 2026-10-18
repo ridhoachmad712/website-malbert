@@ -92,9 +92,10 @@ class AlbumResource extends Resource
     {
         return $table
             ->defaultSort('tanggal', 'desc')
-            ->modifyQueryUsing(fn ($query) => $query->withCount('foto')->with('sampul'))
+            ->modifyQueryUsing(fn ($query) => $query->withCount('foto')->denganSampul())
             ->columns([
-                ImageColumn::make('sampul.path')->label('')->disk('public')->imageWidth(64)->imageHeight(44),
+                ImageColumn::make('sampul')->label('')->disk('public')->imageWidth(64)->imageHeight(44)
+                    ->state(fn (Album $record) => $record->sampul?->path),
                 TextColumn::make('judul')->searchable()->weight('bold')->wrap(),
                 TextColumn::make('tanggal')->date('d/m/Y')->sortable(),
                 TextColumn::make('foto_count')->label('Foto')->suffix(' foto'),

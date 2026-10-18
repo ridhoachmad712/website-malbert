@@ -6,7 +6,9 @@ use App\Casts\Tanggal;
 use App\Models\Concerns\CatatAktivitas;
 use App\Models\Concerns\PunyaSlug;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -16,7 +18,7 @@ class Album extends Model
 
     protected $table = 'album';
 
-    protected $fillable = ['judul', 'slug', 'tanggal', 'keterangan', 'video_youtube', 'terbit', 'foto_diperiksa'];
+    protected $fillable = ['judul', 'slug', 'tanggal', 'keterangan', 'video_youtube', 'sampul_foto_id', 'terbit', 'foto_diperiksa'];
 
     protected function casts(): array
     {
@@ -37,9 +39,27 @@ class Album extends Model
         return $this->hasMany(Foto::class)->orderBy('urutan')->orderBy('id');
     }
 
-    public function sampul(): HasOne
+    /** Foto sampul yang dipilih admin. */
+    public function fotoSampul(): BelongsTo
+    {
+        return $this->belongsTo(Foto::class, 'sampul_foto_id');
+    }
+
+    public function fotoPertama(): HasOne
     {
         return $this->hasOne(Foto::class)->orderBy('urutan')->orderBy('id');
+    }
+
+    /** Sampul album di website: pilihan admin, atau foto pertama bila admin belum memilih. */
+    protected function sampul(): Attribute
+    {
+        return Attribute::get(fn () => $this->fotoSampul?->album_id === $this->id ? $this->fotoSampul : $this->fotoPertama);
+    }
+
+    /** Memuat sampul sekaligus untuk banyak album, agar tidak ada kueri berulang. */
+    public function scopeDenganSampul(Builder $query): void
+    {
+        $query->with(['fotoSampul', 'fotoPertama']);
     }
 
     /** Kode video dari tautan YouTube biasa, youtu.be, atau shorts; null bila tautan tidak dikenali. */

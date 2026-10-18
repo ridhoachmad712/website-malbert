@@ -1,4 +1,4 @@
-<x-layouts.publik :judul="$album->judul" :deskripsi="$album->keterangan ?: 'Dokumentasi kegiatan: '.$album->judul" :gambar="$album->foto->first()?->url()">
+<x-layouts.publik :judul="$album->judul" :deskripsi="$album->keterangan ?: 'Dokumentasi kegiatan: '.$album->judul" :gambar="$album->sampul?->url()">
     <x-kepala-halaman :judul="$album->judul" :ringkasan="$album->keterangan" :jejak="['Galeri' => route('galeri')]">
         <p class="mt-3 text-sm text-slate-600">
             {{ collect([$album->tanggal?->translatedFormat('l, j F Y'), $album->foto->count().' foto'])->filter()->implode(' · ') }}
