@@ -38,27 +38,38 @@
             </section>
 
             <section id="sambutan" class="kartu scroll-mt-24 p-6 sm:p-8">
-                <h2 class="judul-bagian">Sambutan kepala sekolah</h2>
                 @if (filled($sambutan) || filled($kepsek))
-                    <div class="mt-5 flex flex-col gap-6 sm:flex-row">
+                    {{-- Foto dan nama di kepala bagian; foto dikunci ukurannya (self-start) agar tidak meregang setinggi teks sambutan --}}
+                    <div class="flex items-center gap-5 border-b border-garis pb-6">
                         @if ($foto = Pengaturan::urlBerkas('kepsek_foto'))
-                            <img src="{{ $foto }}" alt="Foto {{ $kepsek }}" class="aspect-[3/4] w-40 shrink-0 rounded-lg object-cover">
+                            <img src="{{ $foto }}" alt="Foto {{ $kepsek }}" class="aspect-[3/4] w-24 shrink-0 self-start rounded-lg border border-garis object-cover sm:w-32">
                         @endif
                         <div class="min-w-0">
-                            @if (filled($sambutan))
-                                <x-isi :html="$sambutan" />
-                            @else
-                                <p class="text-slate-700">{{ Pengaturan::ambil('kepsek_sambutan_singkat') }}</p>
-                            @endif
+                            <h2 class="judul-bagian">Sambutan kepala sekolah</h2>
                             @if ($kepsek)
-                                <p class="mt-5 font-extrabold text-slate-900">{{ $kepsek }}</p>
-                                @if ($nip = Pengaturan::ambil('kepsek_nip'))
-                                    <p class="teks-bantu">NIP {{ $nip }}</p>
-                                @endif
+                                <p class="mt-2 font-extrabold text-slate-900">{{ $kepsek }}</p>
+                                <p class="teks-bantu">Kepala {{ Pengaturan::ambil('nama_sekolah') }}</p>
                             @endif
                         </div>
                     </div>
+
+                    <div class="mt-6 max-w-3xl">
+                        @if (filled($sambutan))
+                            <x-isi :html="$sambutan" />
+                        @else
+                            <p class="text-slate-700">{{ Pengaturan::ambil('kepsek_sambutan_singkat') }}</p>
+                        @endif
+                        @if ($kepsek)
+                            <div class="mt-8">
+                                <p class="font-extrabold text-slate-900">{{ $kepsek }}</p>
+                                @if ($nip = Pengaturan::ambil('kepsek_nip'))
+                                    <p class="teks-bantu">NIP {{ $nip }}</p>
+                                @endif
+                            </div>
+                        @endif
+                    </div>
                 @else
+                    <h2 class="judul-bagian">Sambutan kepala sekolah</h2>
                     <p class="mt-3 teks-bantu">Sambutan kepala sekolah belum tersedia. Untuk informasi sekolah, silakan menghubungi kami melalui halaman Kontak.</p>
                 @endif
             </section>

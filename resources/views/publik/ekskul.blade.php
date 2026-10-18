@@ -14,9 +14,9 @@
                 @foreach ($ekskul as $item)
                     <li class="kartu group relative flex gap-4 overflow-hidden p-3 sm:flex-col sm:gap-0 sm:p-0">
                         @if ($foto = $item->urlKecil('foto'))
-                            <img src="{{ $foto }}" alt="" loading="lazy" class="aspect-square w-24 shrink-0 rounded-lg object-cover sm:aspect-[16/10] sm:w-full sm:rounded-none">
+                            <img src="{{ $foto }}" alt="" loading="lazy" class="aspect-square w-24 shrink-0 self-start rounded-lg object-cover sm:aspect-[16/10] sm:w-full sm:rounded-none">
                         @else
-                            <x-foto-pengganti class="aspect-square w-24 shrink-0 rounded-lg sm:aspect-[16/10] sm:w-full sm:rounded-none" />
+                            <x-foto-pengganti class="aspect-square w-24 shrink-0 self-start rounded-lg sm:aspect-[16/10] sm:w-full sm:rounded-none" />
                         @endif
                         <div class="flex min-w-0 flex-1 flex-col py-1 sm:p-5">
                             <h2 class="text-lg font-extrabold text-slate-900">

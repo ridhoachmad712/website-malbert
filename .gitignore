@@ -27,3 +27,6 @@ Thumbs.db
 
 # Dokumen sekolah berisi data asli, tidak masuk git
 /Docs
+
+# Data pribadi guru (bahan impor), tidak boleh masuk git
+/Data Guru/

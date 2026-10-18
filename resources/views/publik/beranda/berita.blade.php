@@ -38,9 +38,9 @@
                     @foreach ($lainnya as $item)
                         <li class="kartu group relative flex gap-4 overflow-hidden p-3">
                             @if ($gambar = $item->urlKecil('gambar'))
-                                <img src="{{ $gambar }}" alt="" loading="lazy" class="aspect-square w-24 shrink-0 rounded-lg object-cover sm:w-28">
+                                <img src="{{ $gambar }}" alt="" loading="lazy" class="aspect-square w-24 shrink-0 self-start rounded-lg object-cover sm:w-28">
                             @else
-                                <x-foto-pengganti class="aspect-square w-24 shrink-0 rounded-lg sm:w-28" />
+                                <x-foto-pengganti class="aspect-square w-24 shrink-0 self-start rounded-lg sm:w-28" />
                             @endif
                             <div class="min-w-0 py-1">
                                 <p class="text-xs font-bold text-slate-600">
