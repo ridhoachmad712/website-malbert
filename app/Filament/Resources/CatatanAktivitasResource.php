@@ -27,7 +27,7 @@ class CatatanAktivitasResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Catatan Aktivitas';
 
-    protected static ?int $navigationSort = 4;
+    protected static ?int $navigationSort = 6;
 
     public static function canCreate(): bool
     {

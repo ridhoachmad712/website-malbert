@@ -1,38 +1,17 @@
 @props(['judul' => null, 'deskripsi' => null, 'gambar' => null])
 
-@use('App\Models\Halaman')
 @use('App\Models\Pengaturan')
+@use('App\Support\Menu')
 
 @php
     $namaSekolah = Pengaturan::ambil('nama_sekolah');
     $deskripsi ??= Pengaturan::ambil('beranda_paragraf');
     $gambar ??= Pengaturan::urlBerkas('beranda_foto') ?? Pengaturan::urlBerkas('logo_sekolah');
 
-    $halamanProfil = Halaman::terbit()->where('grup', 'profil')->orderBy('urutan')->orderBy('judul')->get(['judul', 'slug']);
-    $menuProfil = collect([['url' => route('profil'), 'label' => 'Identitas dan sambutan']])
-        ->merge($halamanProfil->map(fn ($item) => ['url' => route('halaman', $item->slug), 'label' => $item->judul]))
-        ->push(['url' => route('guru'), 'label' => 'Guru dan tenaga kependidikan']);
-    $menuInformasi = collect([
-        ['url' => route('berita'), 'label' => 'Berita'],
-        ['url' => route('berita', ['kategori' => 'pengumuman']), 'label' => 'Pengumuman'],
-        ['url' => route('agenda'), 'label' => 'Agenda'],
-        ['url' => route('galeri'), 'label' => 'Galeri'],
-        ['url' => route('prestasi'), 'label' => 'Prestasi'],
-        ['url' => route('unduhan'), 'label' => 'Unduhan'],
-    ]);
-
-    $sekarang = request()->fullUrl();
-    $aktif = fn (string $url) => $sekarang === $url;
-    $grupAktif = fn ($menu) => $menu->contains(fn ($item) => request()->url() === strtok($item['url'], '?') || str_starts_with(request()->url().'/', strtok($item['url'], '?').'/'));
-
-    $menuUtama = collect([
-        ['label' => 'Beranda', 'url' => route('beranda')],
-        ['label' => 'Profil', 'anak' => $menuProfil],
-        ['label' => 'Informasi', 'anak' => $menuInformasi],
-        ['label' => 'TEBAK AKSI', 'url' => route('tebakaksi')],
-        Pengaturan::aktif('spmb_tampil') ? ['label' => 'SPMB', 'url' => route('spmb')] : null,
-        ['label' => 'Kontak', 'url' => route('kontak')],
-    ])->filter();
+    // Menu, tombol kepala, dan tautan kaki halaman diatur admin di Pengaturan, Menu & Tombol
+    $menuUtama = Menu::utama();
+    $tombolKepala = Menu::tombolKepala();
+    $tautanKaki = Menu::kaki();
 @endphp
 <!DOCTYPE html>
 <html lang="id">
@@ -63,32 +42,47 @@
         <div class="wadah flex h-16 items-center justify-between gap-4">
             <a href="{{ route('beranda') }}" class="min-w-0 shrink"><x-logo /></a>
 
-            <nav class="hidden h-full items-stretch gap-1 lg:flex" aria-label="Menu utama">
-                @foreach ($menuUtama as $item)
-                    @if (isset($item['anak']))
-                        @php $sedang = $grupAktif($item['anak']); @endphp
-                        <details data-menu class="relative flex">
-                            <summary @class(['flex cursor-pointer items-center gap-1 border-b-2 px-3 text-sm font-bold',
-                                'border-brand-700 text-brand-800' => $sedang,
-                                'border-transparent text-slate-600 hover:text-slate-900' => ! $sedang])>
+            <div class="hidden h-full items-stretch gap-1 lg:flex">
+                <nav class="flex h-full items-stretch gap-1" aria-label="Menu utama">
+                    @foreach ($menuUtama as $item)
+                        @if ($item['anak'])
+                            <details data-menu class="relative flex">
+                                <summary @class(['flex cursor-pointer items-center gap-1 border-b-2 px-3 text-sm font-bold',
+                                    'border-brand-700 text-brand-800' => $item['aktif'],
+                                    'border-transparent text-slate-600 hover:text-slate-900' => ! $item['aktif']])>
+                                    {{ $item['label'] }}
+                                    <x-heroicon-m-chevron-down class="h-4 w-4" aria-hidden="true" />
+                                </summary>
+                                <div class="menu-turun">
+                                    @foreach ($item['anak'] as $anak)
+                                        <a href="{{ $anak['url'] }}" @if ($anak['aktif']) aria-current="page" @endif @if ($anak['keluar']) target="_blank" rel="noopener" @endif>
+                                            {{ $anak['label'] }}
+                                            @if ($anak['eksternal'])
+                                                <x-heroicon-m-arrow-top-right-on-square class="ml-auto h-4 w-4 text-slate-500" aria-label="(tautan luar)" />
+                                            @endif
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </details>
+                        @else
+                            <a href="{{ $item['url'] }}" @if ($item['aktif']) aria-current="page" @endif @if ($item['keluar']) target="_blank" rel="noopener" @endif
+                               @class(['flex items-center gap-1 whitespace-nowrap border-b-2 px-3 text-sm font-bold',
+                                   'border-brand-700 text-brand-800' => $item['aktif'],
+                                   'border-transparent text-slate-600 hover:text-slate-900' => ! $item['aktif']])>
                                 {{ $item['label'] }}
-                                <x-heroicon-m-chevron-down class="h-4 w-4" aria-hidden="true" />
-                            </summary>
-                            <div class="menu-turun">
-                                @foreach ($item['anak'] as $anak)
-                                    <a href="{{ $anak['url'] }}" @if ($aktif($anak['url'])) aria-current="page" @endif>{{ $anak['label'] }}</a>
-                                @endforeach
-                            </div>
-                        </details>
-                    @else
-                        @php $sedang = $item['url'] === route('beranda') ? request()->routeIs('beranda') : str_starts_with(request()->url(), $item['url']); @endphp
-                        <a href="{{ $item['url'] }}" @if ($sedang) aria-current="page" @endif
-                           @class(['flex items-center whitespace-nowrap border-b-2 px-3 text-sm font-bold',
-                               'border-brand-700 text-brand-800' => $sedang,
-                               'border-transparent text-slate-600 hover:text-slate-900' => ! $sedang])>{{ $item['label'] }}</a>
-                    @endif
-                @endforeach
-            </nav>
+                                @if ($item['eksternal'])
+                                    <x-heroicon-m-arrow-top-right-on-square class="h-4 w-4" aria-label="(tautan luar)" />
+                                @endif
+                            </a>
+                        @endif
+                    @endforeach
+                </nav>
+                @if ($tombolKepala)
+                    <span class="ml-3 flex items-center">
+                        <a href="{{ $tombolKepala['url'] }}" class="tombol-utama whitespace-nowrap" @if ($tombolKepala['keluar']) target="_blank" rel="noopener" @endif>{{ $tombolKepala['label'] }}</a>
+                    </span>
+                @endif
+            </div>
 
             <details data-menu class="group lg:hidden">
                 <summary class="flex min-h-11 cursor-pointer items-center gap-2 rounded-lg px-3 text-sm font-bold text-slate-700 hover:bg-slate-50">
@@ -99,15 +93,20 @@
                 </summary>
                 <nav class="absolute inset-x-0 top-16 max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-garis bg-white px-4 pb-4 pt-2 shadow-lg" aria-label="Menu utama">
                     @foreach ($menuUtama as $item)
-                        @if (isset($item['anak']))
+                        @if ($item['anak'])
                             <p class="mt-3 px-3 pb-1 text-xs font-bold text-slate-500">{{ $item['label'] }}</p>
                             @foreach ($item['anak'] as $anak)
-                                <a href="{{ $anak['url'] }}" @class(['flex min-h-11 items-center rounded-lg px-3 font-bold', 'bg-brand-50 text-brand-800' => $aktif($anak['url']), 'text-slate-700' => ! $aktif($anak['url'])])>{{ $anak['label'] }}</a>
+                                <a href="{{ $anak['url'] }}" @if ($anak['keluar']) target="_blank" rel="noopener" @endif
+                                   @class(['flex min-h-11 items-center rounded-lg px-3 font-bold', 'bg-brand-50 text-brand-800' => $anak['aktif'], 'text-slate-700' => ! $anak['aktif']])>{{ $anak['label'] }}</a>
                             @endforeach
                         @else
-                            <a href="{{ $item['url'] }}" @class(['flex min-h-11 items-center rounded-lg px-3 font-bold', 'bg-brand-50 text-brand-800' => $aktif($item['url']), 'text-slate-700' => ! $aktif($item['url'])])>{{ $item['label'] }}</a>
+                            <a href="{{ $item['url'] }}" @if ($item['keluar']) target="_blank" rel="noopener" @endif
+                               @class(['flex min-h-11 items-center rounded-lg px-3 font-bold', 'bg-brand-50 text-brand-800' => $item['aktif'], 'text-slate-700' => ! $item['aktif']])>{{ $item['label'] }}</a>
                         @endif
                     @endforeach
+                    @if ($tombolKepala)
+                        <a href="{{ $tombolKepala['url'] }}" class="tombol-utama mt-3 w-full" @if ($tombolKepala['keluar']) target="_blank" rel="noopener" @endif>{{ $tombolKepala['label'] }}</a>
+                    @endif
                 </nav>
             </details>
         </div>
@@ -118,11 +117,14 @@
     </main>
 
     <footer class="mt-20 border-t border-garis bg-white">
-        <div class="wadah grid gap-8 py-10 text-sm text-slate-600 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="wadah grid gap-8 py-12 text-sm text-slate-600 sm:grid-cols-2 lg:grid-cols-4">
             <div class="lg:col-span-2">
-                <p class="text-base font-extrabold text-slate-800">{{ $namaSekolah }}</p>
+                <x-logo />
+                @if ($kalimat = Pengaturan::ambil('kaki_deskripsi'))
+                    <p class="mt-4 max-w-md text-slate-700">{{ $kalimat }}</p>
+                @endif
                 @if ($alamat = Pengaturan::alamatLengkap())
-                    <p class="mt-2 max-w-md">{{ $alamat }}</p>
+                    <p class="mt-4 max-w-md">{{ $alamat }}</p>
                 @endif
                 @if ($jam = Pengaturan::ambil('jam_layanan'))
                     <p class="mt-2">Layanan: {{ $jam }}</p>
@@ -133,7 +135,7 @@
             </div>
             <div>
                 <p class="font-extrabold text-slate-800">Hubungi kami</p>
-                <ul class="mt-2 space-y-1.5">
+                <ul class="mt-3 space-y-1.5">
                     @if ($telepon = Pengaturan::ambil('telepon'))
                         <li>Telepon <a href="tel:{{ preg_replace('/[^\d+]/', '', $telepon) }}" class="tautan">{{ $telepon }}</a></li>
                     @endif
@@ -153,19 +155,16 @@
                     </ul>
                 @endif
             </div>
-            <div>
-                <p class="font-extrabold text-slate-800">Tautan</p>
-                <ul class="mt-2 space-y-1.5">
-                    <li><a href="{{ route('unduhan') }}" class="tautan">Unduhan</a></li>
-                    <li><a href="{{ Pengaturan::ambil('tebakaksi_url') }}" class="tautan" target="_blank" rel="noopener">Aplikasi TEBAK AKSI</a></li>
-                    @if ($resmi = Pengaturan::ambil('tautan_data_resmi'))
-                        <li><a href="{{ $resmi }}" class="tautan" target="_blank" rel="noopener">Data resmi sekolah</a></li>
-                    @endif
-                    @if (Halaman::terbit()->where('slug', 'kebijakan-privasi')->exists())
-                        <li><a href="{{ route('halaman', 'kebijakan-privasi') }}" class="tautan">Kebijakan privasi</a></li>
-                    @endif
-                </ul>
-            </div>
+            @if ($tautanKaki)
+                <div>
+                    <p class="font-extrabold text-slate-800">Tautan</p>
+                    <ul class="mt-3 space-y-1.5">
+                        @foreach ($tautanKaki as $item)
+                            <li><a href="{{ $item['url'] }}" class="tautan" @if ($item['keluar']) target="_blank" rel="noopener" @endif>{{ $item['label'] }}</a></li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
         </div>
         <div class="border-t border-garis">
             <p class="wadah py-4 text-xs text-slate-500">© {{ date('Y') }} {{ $namaSekolah }}</p>

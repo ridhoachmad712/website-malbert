@@ -27,7 +27,7 @@ class CadanganData extends Page
 
     protected static ?string $slug = 'cadangan';
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 4;
 
     public function content(Schema $schema): Schema
     {

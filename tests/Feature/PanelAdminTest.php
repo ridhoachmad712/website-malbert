@@ -18,6 +18,7 @@ use App\Models\Guru;
 use App\Models\Pengaturan;
 use App\Models\User;
 use App\Services\CadanganData;
+use App\Support\BagianBeranda;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -45,7 +46,7 @@ class PanelAdminTest extends TestCase
             '/admin', '/admin/berita', '/admin/berita/buat', '/admin/agenda', '/admin/galeri', '/admin/galeri/buat', '/admin/prestasi',
             '/admin/unduhan', '/admin/pesan', '/admin/identitas-sekolah', '/admin/halaman', '/admin/halaman/buat', '/admin/guru',
             '/admin/guru/buat', '/admin/program-tebak-aksi', '/admin/spmb', '/admin/tampilan-beranda', '/admin/pengguna',
-            '/admin/cadangan', '/admin/catatan-aktivitas', '/admin/profile',
+            '/admin/cadangan', '/admin/menu', '/admin/catatan-aktivitas', '/admin/profile',
             '/admin/berita/'.Berita::first()->slug.'/ubah', '/admin/guru/'.Guru::first()->slug.'/ubah', '/admin/halaman/sejarah/ubah',
         ];
 
@@ -180,11 +181,12 @@ class PanelAdminTest extends TestCase
     {
         Livewire::test(TampilanBeranda::class)
             ->set('data.tema_warna', 'biru')
-            ->set('data.beranda_tampil_agenda', false)
+            ->set('data.beranda_bagian', collect(BagianBeranda::semua())
+                ->map(fn ($bagian) => $bagian['kunci'] === 'agenda' ? [...$bagian, 'tampil' => false] : $bagian)->all())
             ->call('simpan')
             ->assertHasNoErrors();
 
-        $this->get('/')->assertSee('--aksen-700:#1d4ed8', false)->assertDontSee('Agenda terdekat');
+        $this->get('/')->assertSee('--aksen-700:#1d4ed8', false)->assertDontSee('Kegiatan yang akan datang');
     }
 
     public function test_admin_mengisi_spmb(): void

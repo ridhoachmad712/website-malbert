@@ -61,7 +61,8 @@
 }
 
 @utility tombol {
-    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-bold transition-colors;
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-bold transition-colors
+        disabled:cursor-not-allowed disabled:opacity-40;
 }
 
 @utility tautan {
@@ -87,6 +88,11 @@
 
     .tombol-kedua {
         @apply tombol border border-garis bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50;
+    }
+
+    /* Tombol di atas latar gelap (hero dan pita Program) */
+    .tombol-terang {
+        @apply tombol border border-white/60 text-white hover:bg-white/10;
     }
 
     .label {
@@ -192,4 +198,16 @@ dialog.penampil {
 
 dialog.penampil::backdrop {
     background: rgb(15 23 42 / 0.92);
+}
+
+/* Lintasan carousel guru: digeser dengan jari, tombol, atau papan ketik; bilah geser dibuat tipis */
+.lintasan {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-garis) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lintasan {
+        scroll-behavior: auto;
+    }
 }

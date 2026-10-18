@@ -71,7 +71,7 @@ Susunan server: aplikasi di `~/website-sdimalbert`, web root domain utama di `~/
    ```
    Cadangan disimpan di `~/cadangan-website` (14 terakhir). Admin juga bisa mengunduh cadangan dari menu Pengaturan, Cadangan Data.
 9. **Masuk pertama kali** di `/admin`, ganti kata sandi di Profil, lalu aktifkan **verifikasi dua langkah** (aplikasi autentikator) di halaman yang sama. Hapus `ADMIN_PASSWORD` dari `.env` setelah itu.
-10. **Isi data awal**: ikuti daftar "Lengkapi website" di Dasbor admin (logo, identitas, alamat, peta, kepala sekolah, visi-misi, guru).
+10. **Isi data awal**: ikuti daftar "Lengkapi website" di Dasbor admin (logo, identitas, alamat, peta, kepala sekolah, visi-misi, guru). Foto hero, urutan bagian Beranda, dan warna diatur di Pengaturan, Beranda & Warna; menu dan tombol di Pengaturan, Menu & Tombol.
 
 ### Memperbarui
 

@@ -3,6 +3,8 @@
 <article class="kartu flex flex-col overflow-hidden">
     @if ($foto = $prestasi->urlBerkas('foto'))
         <img src="{{ $foto }}" alt="" loading="lazy" class="aspect-[16/10] w-full object-cover">
+    @else
+        <x-foto-pengganti :teks="'Tingkat '.$prestasi->namaTingkat()" class="aspect-[16/10] w-full" />
     @endif
     <div class="flex flex-1 flex-col p-5">
         <p class="flex flex-wrap items-center gap-2">

@@ -3,6 +3,8 @@
 <article class="kartu group relative flex flex-col overflow-hidden">
     @if ($gambar = $berita->urlBerkas('gambar'))
         <img src="{{ $gambar }}" alt="{{ $berita->keterangan_gambar ?: '' }}" loading="lazy" class="aspect-[16/10] w-full object-cover">
+    @else
+        <x-foto-pengganti :teks="$berita->namaKategori()" class="aspect-[16/10] w-full" />
     @endif
     <div class="flex flex-1 flex-col p-5">
         <p class="flex flex-wrap items-center gap-2 text-xs font-bold text-slate-600">

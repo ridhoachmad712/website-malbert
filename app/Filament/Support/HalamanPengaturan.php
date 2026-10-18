@@ -45,7 +45,13 @@ abstract class HalamanPengaturan extends Page
             };
         }
 
-        $this->form->fill($nilai);
+        $this->form->fill($this->nilaiAwal($nilai));
+    }
+
+    /** Kesempatan turunan untuk melengkapi nilai sebelum formulir diisi. */
+    protected function nilaiAwal(array $nilai): array
+    {
+        return $nilai;
     }
 
     public function content(Schema $schema): Schema

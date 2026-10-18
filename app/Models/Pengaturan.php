@@ -62,16 +62,72 @@ class Pengaturan extends Model
         'kepsek_sambutan_singkat' => '',
         'kepsek_sambutan' => '',
 
-        // Beranda
+        // Beranda: hero
         'beranda_judul' => 'Belajar dengan gembira, tumbuh dengan karakter.',
         'beranda_paragraf' => 'Sekolah dasar negeri di Kota Makassar yang membiasakan murid membaca setiap hari dan bertumbuh menjadi pribadi yang santun dan percaya diri.',
         'beranda_foto' => '',
         'beranda_keterangan_foto' => '',
-        'beranda_tampil_sambutan' => true,
-        'beranda_tampil_agenda' => true,
-        'beranda_tampil_program' => true,
-        'beranda_tampil_prestasi' => true,
-        'beranda_tampil_galeri' => true,
+        'beranda_fokus' => 'center',
+        'beranda_tombol1_label' => 'Kenali sekolah kami',
+        'beranda_tombol1_jenis' => 'internal',
+        'beranda_tombol1_tujuan' => 'profil',
+        'beranda_tombol1_url' => '',
+        'beranda_tombol1_tab_baru' => false,
+        'beranda_tombol2_label' => 'Hubungi sekolah',
+        'beranda_tombol2_jenis' => 'internal',
+        'beranda_tombol2_tujuan' => 'kontak',
+        'beranda_tombol2_url' => '',
+        'beranda_tombol2_tab_baru' => false,
+
+        // Beranda: urutan, judul, dan saklar setiap bagian (lihat App\Support\BagianBeranda)
+        'beranda_bagian' => [],
+
+        // Beranda: ajakan penutup
+        'ajakan_judul' => 'Ingin mengenal sekolah kami lebih dekat?',
+        'ajakan_teks' => 'Kunjungi sekolah pada jam layanan atau hubungi kami. Kami senang menjawab pertanyaan orang tua dan masyarakat.',
+        'ajakan_tombol1_label' => 'Hubungi kami',
+        'ajakan_tombol1_jenis' => 'internal',
+        'ajakan_tombol1_tujuan' => 'kontak',
+        'ajakan_tombol1_url' => '',
+        'ajakan_tombol1_tab_baru' => false,
+        'ajakan_tombol2_label' => 'Lihat profil sekolah',
+        'ajakan_tombol2_jenis' => 'internal',
+        'ajakan_tombol2_tujuan' => 'profil',
+        'ajakan_tombol2_url' => '',
+        'ajakan_tombol2_tab_baru' => false,
+
+        // Menu, tombol kepala halaman, dan kaki halaman
+        'menu_utama' => [
+            ['label' => 'Beranda', 'bentuk' => 'tautan', 'jenis' => 'internal', 'tujuan' => 'beranda', 'tampil' => true, 'anak' => []],
+            ['label' => 'Profil', 'bentuk' => 'grup', 'tampil' => true, 'anak' => [
+                ['label' => 'Identitas dan sambutan', 'jenis' => 'internal', 'tujuan' => 'profil'],
+                ['label' => 'Halaman profil', 'jenis' => 'internal', 'tujuan' => 'otomatis:profil'],
+                ['label' => 'Guru dan tenaga kependidikan', 'jenis' => 'internal', 'tujuan' => 'guru'],
+            ]],
+            ['label' => 'Informasi', 'bentuk' => 'grup', 'tampil' => true, 'anak' => [
+                ['label' => 'Berita', 'jenis' => 'internal', 'tujuan' => 'berita'],
+                ['label' => 'Pengumuman', 'jenis' => 'internal', 'tujuan' => 'pengumuman'],
+                ['label' => 'Agenda', 'jenis' => 'internal', 'tujuan' => 'agenda'],
+                ['label' => 'Galeri', 'jenis' => 'internal', 'tujuan' => 'galeri'],
+                ['label' => 'Prestasi', 'jenis' => 'internal', 'tujuan' => 'prestasi'],
+                ['label' => 'Unduhan', 'jenis' => 'internal', 'tujuan' => 'unduhan'],
+            ]],
+            ['label' => 'TEBAK AKSI', 'bentuk' => 'tautan', 'jenis' => 'internal', 'tujuan' => 'tebakaksi', 'tampil' => true, 'anak' => []],
+            ['label' => 'SPMB', 'bentuk' => 'tautan', 'jenis' => 'internal', 'tujuan' => 'spmb', 'tampil' => true, 'anak' => []],
+            ['label' => 'Kontak', 'bentuk' => 'tautan', 'jenis' => 'internal', 'tujuan' => 'kontak', 'tampil' => true, 'anak' => []],
+        ],
+        'kepala_tombol_tampil' => false,
+        'kepala_tombol_label' => 'Hubungi kami',
+        'kepala_tombol_jenis' => 'internal',
+        'kepala_tombol_tujuan' => 'kontak',
+        'kepala_tombol_url' => '',
+        'kepala_tombol_tab_baru' => false,
+        'kaki_deskripsi' => '',
+        'kaki_tautan' => [
+            ['label' => 'Unduhan', 'jenis' => 'internal', 'tujuan' => 'unduhan'],
+            ['label' => 'Aplikasi TEBAK AKSI', 'jenis' => 'url', 'url' => 'https://tebakaksi.sdimalbert.sch.id', 'tab_baru' => true],
+            ['label' => 'Kebijakan privasi', 'jenis' => 'internal', 'tujuan' => 'halaman:kebijakan-privasi'],
+        ],
 
         // Program unggulan TEBAK AKSI
         'tebakaksi_kepanjangan' => 'Teras Baca Kelas Asah Karakter dan Literasi',
@@ -177,6 +233,18 @@ class Pengaturan extends Model
             'YouTube' => self::ambil('medsos_youtube'),
             'TikTok' => self::ambil('medsos_tiktok'),
         ]);
+    }
+
+    /** Data tautan dari pengaturan berawalan, misalnya "beranda_tombol1_" atau "kepala_tombol_". */
+    public static function tautan(string $awalan): array
+    {
+        return [
+            'label' => self::ambil($awalan.'label'),
+            'jenis' => self::ambil($awalan.'jenis', 'internal'),
+            'tujuan' => self::ambil($awalan.'tujuan'),
+            'url' => self::ambil($awalan.'url'),
+            'tab_baru' => self::aktif($awalan.'tab_baru'),
+        ];
     }
 
     public static function simpan(array $data): void

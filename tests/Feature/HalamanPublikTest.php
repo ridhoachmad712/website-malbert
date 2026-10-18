@@ -102,7 +102,7 @@ class HalamanPublikTest extends TestCase
 
         Pengaturan::simpan(['spmb_tampil' => true, 'spmb_status' => 'dibuka', 'spmb_portal_url' => 'https://spmb.contoh.test']);
 
-        $this->get('/')->assertSee('href="'.route('spmb').'"', false)->assertSee('Info penerimaan murid baru');
+        $this->get('/')->assertSee('href="'.route('spmb').'"', false);
         $this->get('/spmb')->assertSee('Daftar di portal SPMB')->assertSee('https://spmb.contoh.test');
     }
 

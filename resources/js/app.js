@@ -69,3 +69,37 @@ if (penampil) {
         tautan[posisi]?.focus();
     });
 }
+
+// Carousel guru di Beranda: tombol Sebelumnya/Berikutnya menggeser sejauh satu layar kartu.
+// Tidak ada putar otomatis; tombol dinonaktifkan di ujung lintasan.
+document.querySelectorAll('[data-carousel]').forEach((carousel) => {
+    const lintasan = carousel.querySelector('[data-lintasan]');
+    const tombol = [...carousel.querySelectorAll('[data-geser]')];
+    if (!lintasan) return;
+
+    const perbarui = () => {
+        const ujung = lintasan.scrollWidth - lintasan.clientWidth - 2;
+        tombol.forEach((t) => {
+            t.disabled = t.dataset.geser === '-1' ? lintasan.scrollLeft <= 2 : lintasan.scrollLeft >= ujung;
+        });
+    };
+
+    tombol.forEach((t) => {
+        t.addEventListener('click', () => {
+            lintasan.scrollBy({ left: Number(t.dataset.geser) * lintasan.clientWidth * 0.9 });
+        });
+    });
+
+    lintasan.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+            event.preventDefault();
+            const arah = event.key === 'ArrowRight' ? 1 : -1;
+            const kartu = lintasan.querySelector('li');
+            lintasan.scrollBy({ left: arah * (kartu ? kartu.offsetWidth + 16 : 200) });
+        }
+    });
+
+    lintasan.addEventListener('scroll', perbarui, { passive: true });
+    window.addEventListener('resize', perbarui);
+    perbarui();
+});

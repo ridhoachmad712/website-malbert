@@ -11,6 +11,8 @@ use App\Models\Pengaturan;
 use App\Models\Pesan;
 use App\Models\Prestasi;
 use App\Models\Unduhan;
+use App\Support\BagianBeranda;
+use Closure;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -20,15 +22,34 @@ class PublikController extends Controller
 {
     public function beranda(): View
     {
-        return view('publik.beranda', [
+        $bagian = BagianBeranda::tampil();
+        $ambil = fn (string $kunci, Closure $query) => isset($bagian[$kunci]) ? $query() : collect();
+
+        $data = [
             'disematkan' => Berita::disematkan()->latest('terbit_pada')->limit(3)->get(),
-            'berita' => Berita::terbit()->latest('terbit_pada')->limit(3)->get(),
-            'agenda' => Pengaturan::aktif('beranda_tampil_agenda') ? Agenda::mendatang()->limit(4)->get() : collect(),
-            'prestasi' => Pengaturan::aktif('beranda_tampil_prestasi') ? Prestasi::terbit()->latest('tanggal')->limit(3)->get() : collect(),
-            'album' => Pengaturan::aktif('beranda_tampil_galeri')
-                ? Album::terbit()->has('foto')->with('sampul')->withCount('foto')->latest('tanggal')->limit(4)->get()
-                : collect(),
+            'berita' => $ambil('berita', fn () => Berita::terbit()->latest('terbit_pada')->limit(4)->get()),
+            'guru' => $ambil('guru', fn () => Guru::tampil()->get()),
+            'agenda' => $ambil('agenda', fn () => Agenda::mendatang()->limit(4)->get()),
+            'prestasi' => $ambil('prestasi', fn () => Prestasi::terbit()->latest('tanggal')->limit(3)->get()),
+            'album' => $ambil('galeri', fn () => Album::terbit()->has('foto')->with('sampul')->withCount('foto')->latest('tanggal')->limit(5)->get()),
             'jumlahGuru' => Guru::where('tampil', true)->count(),
+        ];
+
+        // Bagian yang isinya belum ada dilewati, agar Beranda tidak berisi kotak kosong.
+        // Berita tetap tampil (dengan keterangan kosong) karena menjadi titik fokus Beranda.
+        $ada = [
+            'berita' => true,
+            'sambutan' => filled(Pengaturan::ambil('kepsek_nama')) && filled(Pengaturan::ambil('kepsek_sambutan_singkat')),
+            'guru' => $data['guru']->isNotEmpty(),
+            'agenda' => $data['agenda']->isNotEmpty(),
+            'program' => true,
+            'prestasi' => $data['prestasi']->isNotEmpty(),
+            'galeri' => $data['album']->isNotEmpty(),
+            'ajakan' => filled(Pengaturan::ambil('ajakan_judul')),
+        ];
+
+        return view('publik.beranda', $data + [
+            'bagian' => array_filter($bagian, fn ($item) => $ada[$item['kunci']] ?? false),
         ]);
     }
 

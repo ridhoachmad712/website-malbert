@@ -9,6 +9,7 @@ Website resmi sekolah, terpisah dari aplikasi TEBAK AKSI (kode, database, dan ak
 - **Isi dari editor selalu dibersihkan** saat ditampilkan (`<x-isi>`, memakai `Str::sanitizeHtml`). Jangan pernah `{!! $isi !!}` mentah.
 - Hubungan dengan TEBAK AKSI hanya tautan. Jangan membaca database TEBAK AKSI.
 - Pendaftaran murid baru lewat portal dinas; website tidak punya formulir pendaftaran.
+- Tombol, menu, dan judul bagian diatur admin. Jangan menulis tautan atau teks tetap di Beranda bila sudah ada pengaturannya.
 - Seluruh antarmuka, nama tabel, model, dan variabel domain memakai **bahasa Indonesia**.
 - Data contoh di seeder/tes selalu rekaan; folder `Docs/` tidak masuk git.
 - **Tampilan mengikuti `DESIGN.md`**: tanpa emoji, gradasi, blur, atau bayangan pada panel; satu warna aksen (palet dipilih admin) untuk tindakan utama; keadaan kosong selalu menyebut sebab dan langkah berikutnya.
@@ -16,7 +17,10 @@ Website resmi sekolah, terpisah dari aplikasi TEBAK AKSI (kode, database, dan ak
 ## Struktur
 
 - `app/Models/Pengaturan.php`: semua isian tunggal (identitas, kepala sekolah, beranda, TEBAK AKSI, SPMB); nilai bawaan di `BAWAAN`.
-- `app/Filament/Support/HalamanPengaturan.php`: dasar halaman admin yang mengisi Pengaturan (IdentitasSekolah, TampilanBeranda, ProgramTebakAksi, Spmb).
+- `app/Filament/Support/HalamanPengaturan.php`: dasar halaman admin yang mengisi Pengaturan (IdentitasSekolah, TampilanBeranda, MenuSitus, ProgramTebakAksi, Spmb).
+- `app/Support/Tautan.php`: tautan yang diatur admin (halaman website atau alamat luar); `Isian::tautan()` adalah isiannya. Alamat luar hanya `https://`, `mailto:`, `tel:`.
+- `app/Support/Menu.php`: menu utama, tombol kepala halaman, dan tautan kaki halaman dari Pengaturan; tautan yang tujuannya hilang dilewati.
+- `app/Support/BagianBeranda.php`: urutan, judul, dan saklar bagian Beranda; tampilannya di `resources/views/publik/beranda/*` (satu berkas per bagian).
 - `app/Filament/Support/HapusAman.php`: penghapusan yang menolak album berisi foto dan akun admin sendiri.
 - `app/Models/Concerns`: `PunyaSlug` (slug otomatis, tidak berubah saat judul diubah), `HapusBerkas` (berkas lama ikut dihapus), `CatatAktivitas`.
 - `app/Http/Controllers/PublikController.php` + `resources/views/publik/*`: halaman publik (Blade biasa, tanpa Livewire).
