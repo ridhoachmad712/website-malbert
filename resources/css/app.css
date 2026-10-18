@@ -1,0 +1,195 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../../app/**/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+/* Token mengikuti DESIGN.md. Warna aksen berasal dari palet yang dipilih admin
+   (App\Support\PaletWarna); nilai di :root di bawah adalah palet bawaan Jingga. */
+@theme {
+    --font-sans: 'Nunito', ui-sans-serif, system-ui, sans-serif;
+    --color-krem: #fffaf3;
+    --color-garis: #ece3d6;
+}
+
+@theme inline {
+    --color-brand-50: var(--aksen-50);
+    --color-brand-100: var(--aksen-100);
+    --color-brand-200: var(--aksen-200);
+    --color-brand-300: var(--aksen-300);
+    --color-brand-500: var(--aksen-500);
+    --color-brand-600: var(--aksen-600);
+    --color-brand-700: var(--aksen-700);
+    --color-brand-800: var(--aksen-800);
+    --color-brand-900: var(--aksen-900);
+}
+
+:root {
+    --aksen-50: #fff7ed;
+    --aksen-100: #ffedd5;
+    --aksen-200: #fed7aa;
+    --aksen-300: #fdba74;
+    --aksen-500: #f97316;
+    --aksen-600: #ea580c;
+    --aksen-700: #c2410c;
+    --aksen-800: #9a3412;
+    --aksen-900: #7c2d12;
+}
+
+@layer base {
+    html {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+        @apply bg-krem text-slate-800 antialiased;
+    }
+
+    :focus-visible {
+        @apply outline-2 outline-offset-2 outline-brand-700;
+    }
+
+    summary {
+        list-style: none;
+    }
+
+    summary::-webkit-details-marker {
+        display: none;
+    }
+}
+
+@utility tombol {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-bold transition-colors;
+}
+
+@utility tautan {
+    @apply font-bold text-brand-700 underline-offset-4 hover:underline;
+}
+
+@utility lencana {
+    @apply inline-flex items-center gap-1 rounded-md bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-700;
+}
+
+@layer components {
+    .wadah {
+        @apply mx-auto w-full max-w-6xl px-4;
+    }
+
+    .kartu {
+        @apply rounded-xl border border-garis bg-white;
+    }
+
+    .tombol-utama {
+        @apply tombol bg-brand-700 text-white hover:bg-brand-800;
+    }
+
+    .tombol-kedua {
+        @apply tombol border border-garis bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50;
+    }
+
+    .label {
+        @apply mb-1.5 block text-sm font-bold text-slate-700;
+    }
+
+    .isian {
+        @apply block min-h-11 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base text-slate-800
+            placeholder:text-slate-500 focus:border-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-200 sm:text-sm;
+    }
+
+    .galat {
+        @apply mt-1 text-sm font-semibold text-rose-700;
+    }
+
+    .lencana-aksen {
+        @apply lencana bg-brand-50 text-brand-800;
+    }
+
+    .judul-halaman {
+        @apply text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl;
+    }
+
+    .judul-bagian {
+        @apply text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl;
+    }
+
+    .teks-bantu {
+        @apply text-sm text-slate-600;
+    }
+
+    .tab {
+        @apply inline-flex min-h-11 items-center rounded-lg px-3.5 py-2 text-sm font-bold transition-colors;
+    }
+
+    .tab-aktif {
+        @apply bg-slate-800 text-white;
+    }
+
+    .tab-pasif {
+        @apply border border-garis bg-white text-slate-700 hover:bg-slate-50;
+    }
+
+    .menu-turun {
+        @apply absolute left-0 top-full z-40 mt-1 w-64 rounded-xl border border-garis bg-white p-2 shadow-lg;
+    }
+
+    .menu-turun a {
+        @apply flex min-h-11 items-center rounded-lg px-3 text-sm font-bold text-slate-700 hover:bg-krem;
+    }
+
+    .menu-turun a[aria-current='page'] {
+        @apply bg-brand-50 text-brand-800;
+    }
+
+    .isi-konten {
+        @apply text-base leading-relaxed text-slate-700 sm:text-[1.0625rem];
+    }
+
+    .isi-konten p {
+        @apply mb-4;
+    }
+
+    .isi-konten h2 {
+        @apply mt-8 mb-3 text-xl font-extrabold text-slate-900;
+    }
+
+    .isi-konten h3 {
+        @apply mt-6 mb-2 text-lg font-bold text-slate-900;
+    }
+
+    .isi-konten ul {
+        @apply mb-4 list-disc pl-6;
+    }
+
+    .isi-konten ol {
+        @apply mb-4 list-decimal pl-6;
+    }
+
+    .isi-konten li {
+        @apply mb-1;
+    }
+
+    .isi-konten a {
+        @apply tautan;
+    }
+
+    .isi-konten blockquote {
+        @apply my-5 border-l-4 border-brand-300 pl-4 text-slate-600 italic;
+    }
+
+    .isi-konten > :last-child {
+        @apply mb-0;
+    }
+}
+
+/* Penampil foto galeri */
+dialog.penampil {
+    @apply m-auto max-h-none max-w-none bg-transparent p-0;
+    width: 100vw;
+    height: 100dvh;
+}
+
+dialog.penampil::backdrop {
+    background: rgb(15 23 42 / 0.92);
+}

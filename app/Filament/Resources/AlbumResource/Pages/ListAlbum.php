@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Filament\Resources\AlbumResource\Pages;
+
+use App\Filament\Resources\AlbumResource;
+use Filament\Actions\CreateAction;
+use Filament\Resources\Pages\ListRecords;
+
+class ListAlbum extends ListRecords
+{
+    protected static string $resource = AlbumResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [CreateAction::make()->label('Buat album')];
+    }
+}
