@@ -157,7 +157,12 @@
     }
 
     .isi-konten h2 {
-        @apply mt-8 mb-3 text-xl font-extrabold text-slate-900;
+        @apply mt-10 mb-4 text-xl font-extrabold tracking-tight text-slate-900 sm:text-2xl;
+    }
+
+    .isi-konten > h2:first-child,
+    .isi-konten > h3:first-child {
+        @apply mt-0;
     }
 
     .isi-konten h3 {
@@ -168,12 +173,29 @@
         @apply mb-4 list-disc pl-6;
     }
 
+    /* Daftar bernomor: nomor dalam kotak kecil berwarna aksen, seperti langkah di halaman program */
     .isi-konten ol {
-        @apply mb-4 list-decimal pl-6;
+        @apply mb-6 space-y-3;
+        counter-reset: butir;
     }
 
-    .isi-konten li {
-        @apply mb-1;
+    .isi-konten ol > li {
+        @apply relative min-h-8 pl-11;
+        counter-increment: butir;
+    }
+
+    .isi-konten ol > li::before {
+        @apply absolute top-0 left-0 grid h-8 w-8 place-items-center rounded-lg bg-brand-50 text-sm font-extrabold text-brand-800;
+        content: counter(butir);
+    }
+
+    .isi-konten ul > li {
+        @apply mb-1.5;
+    }
+
+    /* Editor membungkus isi butir dengan paragraf; jarak paragraf tidak dipakai di dalam daftar */
+    .isi-konten li > p {
+        @apply mb-0;
     }
 
     .isi-konten a {

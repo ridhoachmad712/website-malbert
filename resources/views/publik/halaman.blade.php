@@ -2,8 +2,8 @@
     <x-kepala-halaman :judul="$halaman->judul" :ringkasan="$halaman->ringkasan"
         :jejak="$halaman->grup === 'profil' ? ['Profil' => route('profil')] : []" />
 
-    <div @class(['wadah mt-10 grid gap-8', 'lg:grid-cols-3' => $lainnya->count() > 1])>
-        <article @class(['kartu p-6 sm:p-8', 'lg:col-span-2' => $lainnya->count() > 1])>
+    <div @class(['wadah mt-10 grid gap-8', 'lg:grid-cols-3' => $lainnya->isNotEmpty()])>
+        <article @class(['kartu p-6 sm:p-8', 'lg:col-span-2' => $lainnya->isNotEmpty()])>
             @if (filled(strip_tags((string) $halaman->isi)))
                 <x-isi :html="$halaman->isi" class="max-w-3xl" />
             @elseif (! $halaman->gambar)
@@ -18,7 +18,7 @@
             @endif
         </article>
 
-        @if ($lainnya->count() > 1)
+        @if ($lainnya->isNotEmpty())
             <aside>
                 <h2 class="font-extrabold text-slate-900">Profil lainnya</h2>
                 <nav class="mt-3 kartu p-2" aria-label="Halaman profil">

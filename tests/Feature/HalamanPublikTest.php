@@ -9,6 +9,7 @@ use App\Models\Guru;
 use App\Models\Halaman;
 use App\Models\Pengaturan;
 use App\Models\Pesan;
+use App\Support\Teks;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
@@ -85,6 +86,16 @@ class HalamanPublikTest extends TestCase
         ]);
 
         $this->get($berita->url())->assertOk()->assertSee('Aman')->assertDontSee('alert("x")', false)->assertDontSee('onerror', false);
+    }
+
+    public function test_paragraf_tebal_pendek_menjadi_judul_tetapi_tebal_dalam_kalimat_tidak(): void
+    {
+        $hasil = Teks::isiRapi('<p><strong>Visi</strong></p><p>PERMATA adalah <strong>Permisi, Maaf, dan Terima Kasih</strong>.</p><p><strong>Misi</strong></p><script>alert(1)</script>');
+
+        $this->assertStringContainsString('<h2>Visi</h2>', $hasil);
+        $this->assertStringContainsString('<h2>Misi</h2>', $hasil);
+        $this->assertStringContainsString('<p>PERMATA adalah <strong>Permisi, Maaf, dan Terima Kasih</strong>.</p>', $hasil);
+        $this->assertStringNotContainsString('<script', $hasil);
     }
 
     public function test_nama_penulis_tampil_dan_bawaan_admin_sekolah(): void
