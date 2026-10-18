@@ -31,7 +31,7 @@ Susunan server: aplikasi di `~/website-sdimalbert`, web root domain utama di `~/
 2. **Ambil kode** lewat SSH:
    ```bash
    cd ~
-   git clone https://github.com/ridhoachmad712/website-sdimalbert.git
+   git clone https://github.com/ridhoachmad712/website-malbert.git website-sdimalbert
    cd website-sdimalbert
    composer install --no-dev --optimize-autoloader
    cp .env.example .env
