@@ -22,6 +22,9 @@ class CatatanAktivitas extends Model
         Prestasi::class => 'Prestasi',
         Guru::class => 'Guru dan tendik',
         Unduhan::class => 'Unduhan',
+        DokumenAnggaran::class => 'Dokumen anggaran',
+        Ekstrakurikuler::class => 'Ekstrakurikuler',
+        Sarana::class => 'Sarana',
     ];
 
     public static function catat(string $aksi, Model $model): void

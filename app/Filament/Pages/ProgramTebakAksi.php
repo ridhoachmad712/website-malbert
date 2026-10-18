@@ -19,7 +19,7 @@ class ProgramTebakAksi extends HalamanPengaturan
 {
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Program & SPMB';
+    protected static string|UnitEnum|null $navigationGroup = 'Program & Layanan';
 
     protected static ?string $navigationLabel = 'Program TEBAK AKSI';
 

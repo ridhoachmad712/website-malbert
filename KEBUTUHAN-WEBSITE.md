@@ -242,3 +242,11 @@ Data anak termasuk data pribadi yang dilindungi (UU No. 27 Tahun 2022 tentang Pe
 - Data guru: foto, nama, jabatan, NIP, motto, profil, media sosial, dan tombol tautan luar, semuanya diatur admin.
 - Repo `website-sdimalbert`, folder server `~/website-sdimalbert`. Pembangunan tahap 1 disetujui.
 - Cek server: website lama adalah aplikasi Laravel di `~/domains/sdimalbert.sch.id/website`. `public_html` berupa folder biasa berisi berkas `public` + `index.php` yang menunjuk ke `../website`, dengan `storage` dan `tebakaksi` sebagai symlink (`tebakaksi -> ~/tebak-aksi/public`). Susunan ini sudah terbukti berjalan, jadi deploy baru memakai pola yang sama: ganti isi `public_html` kecuali `tebakaksi`, arahkan `index.php` ke `~/website-sdimalbert`. Server PHP 8.4, MariaDB 11.8, `mysqldump` tersedia.
+
+## 12. Tambahan setelah tahap 1 (19 Oktober 2026)
+
+- Beranda: hero foto penuh, berita utama, sambutan berfoto, carousel guru, pita TEBAK AKSI, mosaik galeri, ajakan penutup. Urutan dan judul bagian, tombol, menu, dan tautan kaki halaman diatur admin.
+- Warna latar putih dan abu lembut (tanpa krem).
+- **Transparansi anggaran**: RKAS dan laporan realisasi penggunaan dana BOSP per tahun dan per tahap, dengan ringkasan angka opsional, sesuai kewajiban publikasi dalam petunjuk teknis BOSP.
+- Foto kecil WebP otomatis, pencarian, pratinjau draf berita, data terstruktur NewsArticle.
+- Ekstrakurikuler, sarana dan prasarana bergaleri, dan alumni (cerita oleh admin dan formulir kiriman yang diperiksa admin).

@@ -46,7 +46,7 @@ class PanelAdminTest extends TestCase
             '/admin', '/admin/berita', '/admin/berita/buat', '/admin/agenda', '/admin/galeri', '/admin/galeri/buat', '/admin/prestasi',
             '/admin/unduhan', '/admin/pesan', '/admin/identitas-sekolah', '/admin/halaman', '/admin/halaman/buat', '/admin/guru',
             '/admin/guru/buat', '/admin/program-tebak-aksi', '/admin/spmb', '/admin/tampilan-beranda', '/admin/pengguna',
-            '/admin/cadangan', '/admin/menu', '/admin/catatan-aktivitas', '/admin/profile',
+            '/admin/cadangan', '/admin/menu', '/admin/transparansi', '/admin/ekstrakurikuler', '/admin/ekstrakurikuler/buat', '/admin/sarana', '/admin/alumni', '/admin/teks-pengantar', '/admin/catatan-aktivitas', '/admin/profile',
             '/admin/berita/'.Berita::first()->slug.'/ubah', '/admin/guru/'.Guru::first()->slug.'/ubah', '/admin/halaman/sejarah/ubah',
         ];
 

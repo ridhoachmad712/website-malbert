@@ -2,6 +2,7 @@
 
 namespace App\Models\Concerns;
 
+use App\Support\Foto;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -17,7 +18,7 @@ trait HapusBerkas
             foreach ($model->kolomBerkas as $kolom) {
                 $lama = $model->getOriginal($kolom);
                 if ($model->wasChanged($kolom) && filled($lama)) {
-                    Storage::disk('public')->delete($lama);
+                    Foto::hapus($lama);
                 }
             }
         });
@@ -25,7 +26,7 @@ trait HapusBerkas
         static::deleted(function ($model) {
             foreach ($model->kolomBerkas as $kolom) {
                 if (filled($model->{$kolom})) {
-                    Storage::disk('public')->delete($model->{$kolom});
+                    Foto::hapus($model->{$kolom});
                 }
             }
         });
@@ -34,5 +35,11 @@ trait HapusBerkas
     public function urlBerkas(string $kolom): ?string
     {
         return filled($this->{$kolom}) ? Storage::disk('public')->url($this->{$kolom}) : null;
+    }
+
+    /** Versi kecil foto untuk kartu dan galeri (lihat App\Support\Foto). */
+    public function urlKecil(string $kolom): ?string
+    {
+        return Foto::kecil($this->{$kolom});
     }
 }

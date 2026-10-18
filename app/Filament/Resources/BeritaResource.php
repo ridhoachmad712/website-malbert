@@ -115,9 +115,9 @@ class BeritaResource extends Resource
                 SelectFilter::make('status')->options(Berita::STATUS),
             ])
             ->recordActions([
-                Action::make('lihat')->icon(Heroicon::OutlinedEye)->color('gray')
-                    ->url(fn (Berita $record) => $record->url(), shouldOpenInNewTab: true)
-                    ->visible(fn (Berita $record) => $record->status === 'terbit'),
+                Action::make('lihat')->label(fn (Berita $record) => $record->status === 'terbit' ? 'Lihat' : 'Pratinjau')
+                    ->icon(Heroicon::OutlinedEye)->color('gray')
+                    ->url(fn (Berita $record) => route('berita.pratinjau', $record->slug), shouldOpenInNewTab: true),
                 EditAction::make(),
                 DeleteAction::make(),
             ])

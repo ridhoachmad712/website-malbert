@@ -25,7 +25,7 @@ class Spmb extends HalamanPengaturan
 {
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Program & SPMB';
+    protected static string|UnitEnum|null $navigationGroup = 'Program & Layanan';
 
     protected static ?string $navigationLabel = 'SPMB';
 

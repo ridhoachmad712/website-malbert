@@ -2,7 +2,7 @@
 
 <a href="{{ $album->url() }}" class="kartu group block overflow-hidden">
     @if ($album->sampul)
-        <img src="{{ $album->sampul->url() }}" alt="" loading="lazy" class="aspect-[4/3] w-full object-cover">
+        <img src="{{ $album->sampul->urlKecil('path') }}" alt="" loading="lazy" class="aspect-[4/3] w-full object-cover">
     @elseif ($kode = $album->kodeYoutube())
         <img src="https://i.ytimg.com/vi/{{ $kode }}/hqdefault.jpg" alt="" loading="lazy" class="aspect-[4/3] w-full object-cover">
     @endif

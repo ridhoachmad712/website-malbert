@@ -2,7 +2,7 @@
 
 Website resmi UPT SPF SD Inpres Mallengkeri Bertingkat (sdimalbert.sch.id). Terpisah dari aplikasi TEBAK AKSI: kode, database, dan akun admin sendiri. Kebutuhan dan keputusan produk ada di `KEBUTUHAN-WEBSITE.md`.
 
-- Halaman publik: Beranda, Profil (identitas, sambutan, halaman profil, guru dan tendik), Berita dan Pengumuman, Agenda, Galeri, Prestasi, Unduhan, Program TEBAK AKSI, SPMB, Kontak.
+- Halaman publik: Beranda, Profil (identitas, sambutan, halaman profil, guru dan tendik, ekstrakurikuler, sarana dan prasarana, alumni), Berita dan Pengumuman, Agenda, Galeri, Prestasi, Unduhan, Transparansi Anggaran, Program TEBAK AKSI, SPMB, Kontak, dan Pencarian.
 - Panel admin di `/admin` (Filament). Semua konten dikelola admin; tidak ada pendaftaran akun.
 
 ## Menjalankan di laptop
@@ -81,8 +81,11 @@ git pull
 composer install --no-dev --optimize-autoloader
 php artisan migrate --force
 php artisan filament:assets
+php artisan foto:buat-kecil
 php artisan optimize
 bash scripts/pasang-public-html.sh
 ```
+
+`foto:buat-kecil` membuat versi kecil (WebP) untuk foto lama; foto baru otomatis dibuatkan saat diunggah. Aman dijalankan berulang.
 
 Aset CSS/JS dibangun di laptop (`npm run build`) dan ikut di-commit, karena server tidak menjalankan Node.

@@ -83,5 +83,7 @@ class DataContohSeeder extends Seeder
             'peraih' => 'Murid Contoh (Kelas V)', 'peringkat' => 'Juara 2', 'tingkat' => 'kota',
             'penyelenggara' => 'Penyelenggara Contoh', 'tanggal' => today()->subMonth(),
         ]);
+
+        $this->call(DataContohTambahanSeeder::class);
     }
 }

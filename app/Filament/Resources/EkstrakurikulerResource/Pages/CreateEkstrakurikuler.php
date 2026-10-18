@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Filament\Resources\EkstrakurikulerResource\Pages;
+
+use App\Filament\Resources\EkstrakurikulerResource;
+use Filament\Resources\Pages\CreateRecord;
+
+class CreateEkstrakurikuler extends CreateRecord
+{
+    protected static string $resource = EkstrakurikulerResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+}

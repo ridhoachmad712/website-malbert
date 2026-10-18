@@ -20,9 +20,9 @@ class EditBerita extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('lihat')->label('Lihat di website')->icon(Heroicon::OutlinedEye)->color('gray')
-                ->url(fn () => $this->record->url(), shouldOpenInNewTab: true)
-                ->visible(fn () => $this->record->status === 'terbit'),
+            Action::make('pratinjau')->label('Pratinjau')->icon(Heroicon::OutlinedEye)->color('gray')
+                ->url(fn () => route('berita.pratinjau', $this->record->slug), shouldOpenInNewTab: true)
+                ->tooltip('Lihat tampilan berita di website sebelum diterbitkan. Simpan dulu perubahan terbaru.'),
             DeleteAction::make(),
         ];
     }

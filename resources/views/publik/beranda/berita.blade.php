@@ -37,7 +37,7 @@
                 <ul class="flex flex-col gap-4 lg:col-span-2">
                     @foreach ($lainnya as $item)
                         <li class="kartu group relative flex gap-4 overflow-hidden p-3">
-                            @if ($gambar = $item->urlBerkas('gambar'))
+                            @if ($gambar = $item->urlKecil('gambar'))
                                 <img src="{{ $gambar }}" alt="" loading="lazy" class="aspect-square w-24 shrink-0 rounded-lg object-cover sm:w-28">
                             @else
                                 <x-foto-pengganti class="aspect-square w-24 shrink-0 rounded-lg sm:w-28" />

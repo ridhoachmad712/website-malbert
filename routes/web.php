@@ -21,6 +21,14 @@ Route::controller(PublikController::class)->group(function () {
     Route::get('/prestasi', 'prestasi')->name('prestasi');
     Route::get('/unduhan', 'unduhan')->name('unduhan');
 
+    Route::get('/ekstrakurikuler', 'ekskul')->name('ekskul');
+    Route::get('/ekstrakurikuler/{ekstrakurikuler:slug}', 'ekskulDetail')->name('ekskul.detail');
+    Route::get('/sarana', 'sarana')->name('sarana');
+    Route::get('/transparansi', 'transparansi')->name('transparansi');
+    Route::get('/alumni', 'alumni')->name('alumni');
+    Route::post('/alumni', 'kirimAlumni')->middleware('throttle:3,10')->name('alumni.kirim');
+    Route::get('/cari', 'cari')->middleware('throttle:30,1')->name('cari');
+
     Route::get('/tebak-aksi', 'tebakAksi')->name('tebakaksi');
     Route::get('/spmb', 'spmb')->name('spmb');
 
@@ -29,3 +37,6 @@ Route::controller(PublikController::class)->group(function () {
 });
 
 Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
+
+// Pratinjau berita yang belum terbit, hanya untuk admin yang sudah masuk
+Route::get('/pratinjau/berita/{berita:slug}', [PublikController::class, 'pratinjauBerita'])->middleware('auth')->name('berita.pratinjau');

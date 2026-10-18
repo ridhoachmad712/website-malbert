@@ -103,6 +103,9 @@ class Pengaturan extends Model
                 ['label' => 'Identitas dan sambutan', 'jenis' => 'internal', 'tujuan' => 'profil'],
                 ['label' => 'Halaman profil', 'jenis' => 'internal', 'tujuan' => 'otomatis:profil'],
                 ['label' => 'Guru dan tenaga kependidikan', 'jenis' => 'internal', 'tujuan' => 'guru'],
+                ['label' => 'Ekstrakurikuler', 'jenis' => 'internal', 'tujuan' => 'ekskul'],
+                ['label' => 'Sarana dan prasarana', 'jenis' => 'internal', 'tujuan' => 'sarana'],
+                ['label' => 'Alumni', 'jenis' => 'internal', 'tujuan' => 'alumni'],
             ]],
             ['label' => 'Informasi', 'bentuk' => 'grup', 'tampil' => true, 'anak' => [
                 ['label' => 'Berita', 'jenis' => 'internal', 'tujuan' => 'berita'],
@@ -111,6 +114,7 @@ class Pengaturan extends Model
                 ['label' => 'Galeri', 'jenis' => 'internal', 'tujuan' => 'galeri'],
                 ['label' => 'Prestasi', 'jenis' => 'internal', 'tujuan' => 'prestasi'],
                 ['label' => 'Unduhan', 'jenis' => 'internal', 'tujuan' => 'unduhan'],
+                ['label' => 'Transparansi anggaran', 'jenis' => 'internal', 'tujuan' => 'transparansi'],
             ]],
             ['label' => 'TEBAK AKSI', 'bentuk' => 'tautan', 'jenis' => 'internal', 'tujuan' => 'tebakaksi', 'tampil' => true, 'anak' => []],
             ['label' => 'SPMB', 'bentuk' => 'tautan', 'jenis' => 'internal', 'tujuan' => 'spmb', 'tampil' => true, 'anak' => []],
@@ -125,6 +129,7 @@ class Pengaturan extends Model
         'kaki_deskripsi' => '',
         'kaki_tautan' => [
             ['label' => 'Unduhan', 'jenis' => 'internal', 'tujuan' => 'unduhan'],
+            ['label' => 'Transparansi anggaran', 'jenis' => 'internal', 'tujuan' => 'transparansi'],
             ['label' => 'Aplikasi TEBAK AKSI', 'jenis' => 'url', 'url' => 'https://tebakaksi.sdimalbert.sch.id', 'tab_baru' => true],
             ['label' => 'Kebijakan privasi', 'jenis' => 'internal', 'tujuan' => 'halaman:kebijakan-privasi'],
         ],
@@ -154,6 +159,13 @@ class Pengaturan extends Model
         'spmb_tanya' => [],
         'spmb_narahubung' => '',
 
+        // Teks pengantar halaman (diatur admin di Pengaturan, Teks Pengantar)
+        'transparansi_pengantar' => 'Sesuai petunjuk teknis Bantuan Operasional Satuan Pendidikan (BOSP), sekolah mempublikasikan rencana kegiatan dan anggaran serta laporan realisasi penggunaan dana kepada masyarakat. Dokumen yang sama juga dipasang di papan informasi sekolah. Pertanyaan tentang penggunaan dana dapat disampaikan melalui halaman Kontak.',
+        'ekskul_pengantar' => 'Kegiatan di luar jam pelajaran untuk mengembangkan minat, bakat, dan karakter murid.',
+        'sarana_pengantar' => 'Ruang belajar dan fasilitas pendukung yang tersedia di sekolah.',
+        'alumni_pengantar' => 'Kabar dan cerita dari alumni sekolah. Alumni dapat mengirim data melalui formulir di bawah; kiriman tampil setelah diperiksa admin.',
+        'alumni_formulir_tampil' => true,
+
         // Lain-lain
         'cadangan_terakhir' => '',
     ];
@@ -166,10 +178,12 @@ class Pengaturan extends Model
 
     public static function semua(): array
     {
-        return Cache::rememberForever('pengaturan', fn () => array_merge(
+        // Hanya isi database yang disimpan di cache; nilai bawaan selalu digabung saat dibaca,
+        // agar pengaturan baru dari pembaruan aplikasi langsung berlaku tanpa mengosongkan cache.
+        return array_merge(
             self::BAWAAN,
-            static::query()->pluck('nilai', 'kunci')->all(),
-        ));
+            Cache::rememberForever('pengaturan', fn () => static::query()->pluck('nilai', 'kunci')->all()),
+        );
     }
 
     public static function ambil(string $kunci, mixed $bawaan = null): mixed

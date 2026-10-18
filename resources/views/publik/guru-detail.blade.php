@@ -14,7 +14,7 @@
     </div>
 
     <article class="wadah mt-10 grid gap-8 md:grid-cols-3">
-        <div class="mx-auto w-full max-w-xs md:max-w-none">
+        <div class="mx-auto w-full max-w-56 sm:max-w-xs md:max-w-none">
             <x-foto-guru :guru="$guru" besar class="rounded-xl border border-garis" />
         </div>
 

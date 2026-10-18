@@ -2,7 +2,7 @@
 
 <x-layouts.publik :judul="$kategori ? Berita::KATEGORI[$kategori] : 'Berita'">
     <x-kepala-halaman :judul="$kategori === 'pengumuman' ? 'Pengumuman' : 'Berita dan pengumuman'" :jejak="['Berita' => route('berita')]">
-        <nav class="mt-6 flex flex-wrap gap-2" aria-label="Kategori berita">
+        <nav class="-mx-4 mt-6 tanpa-bilah flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0" aria-label="Kategori berita">
             <a href="{{ route('berita') }}" @class(['tab', 'tab-aktif' => ! $kategori, 'tab-pasif' => $kategori]) @if (! $kategori) aria-current="page" @endif>Semua</a>
             @foreach (Berita::KATEGORI as $kunci => $label)
                 <a href="{{ route('berita', ['kategori' => $kunci]) }}" @class(['tab', 'tab-aktif' => $kategori === $kunci, 'tab-pasif' => $kategori !== $kunci])

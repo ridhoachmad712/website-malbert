@@ -2,7 +2,7 @@
 
 {{-- Judul halaman dengan jejak tautan (breadcrumb) --}}
 <div class="border-b border-garis bg-white">
-    <div class="wadah py-8 sm:py-10">
+    <div class="wadah py-7 sm:py-10">
         @if ($jejak)
             <nav aria-label="Jejak halaman" class="mb-3 text-sm">
                 <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-slate-600">
@@ -16,7 +16,7 @@
         @endif
         <h1 class="judul-halaman max-w-4xl">{{ $judul }}</h1>
         @if ($ringkasan)
-            <p class="mt-3 max-w-3xl text-lg text-slate-600">{{ $ringkasan }}</p>
+            <p class="mt-3 max-w-3xl text-base text-slate-600 sm:text-lg">{{ $ringkasan }}</p>
         @endif
         {{ $slot }}
     </div>

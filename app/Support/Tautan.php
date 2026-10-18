@@ -22,6 +22,10 @@ class Tautan
         'galeri' => 'Galeri',
         'prestasi' => 'Prestasi',
         'unduhan' => 'Unduhan',
+        'transparansi' => 'Transparansi anggaran',
+        'ekskul' => 'Ekstrakurikuler',
+        'sarana' => 'Sarana dan prasarana',
+        'alumni' => 'Alumni',
         'tebakaksi' => 'Program TEBAK AKSI',
         'spmb' => 'SPMB',
         'kontak' => 'Kontak',
@@ -74,7 +78,8 @@ class Tautan
             'pengumuman' => route('berita', ['kategori' => 'pengumuman']),
             // Saat SPMB dimatikan admin, semua tautan ke halaman SPMB ikut disembunyikan
             'spmb' => Pengaturan::aktif('spmb_tampil') ? route('spmb') : null,
-            'beranda', 'profil', 'guru', 'berita', 'agenda', 'galeri', 'prestasi', 'unduhan', 'tebakaksi', 'kontak' => route($tujuan),
+            'beranda', 'profil', 'guru', 'berita', 'agenda', 'galeri', 'prestasi', 'unduhan', 'tebakaksi', 'kontak',
+            'transparansi', 'ekskul', 'sarana', 'alumni' => route($tujuan),
             default => null,
         };
     }

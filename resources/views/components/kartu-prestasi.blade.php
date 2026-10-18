@@ -1,7 +1,7 @@
 @props(['prestasi'])
 
 <article class="kartu flex flex-col overflow-hidden">
-    @if ($foto = $prestasi->urlBerkas('foto'))
+    @if ($foto = $prestasi->urlKecil('foto'))
         <img src="{{ $foto }}" alt="" loading="lazy" class="aspect-[16/10] w-full object-cover">
     @else
         <x-foto-pengganti :teks="'Tingkat '.$prestasi->namaTingkat()" class="aspect-[16/10] w-full" />

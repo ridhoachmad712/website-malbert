@@ -125,7 +125,7 @@
     }
 
     .tab {
-        @apply inline-flex min-h-11 items-center rounded-lg px-3.5 py-2 text-sm font-bold transition-colors;
+        @apply inline-flex min-h-11 shrink-0 items-center whitespace-nowrap rounded-lg px-3.5 py-2 text-sm font-bold transition-colors;
     }
 
     .tab-aktif {
@@ -210,4 +210,13 @@ dialog.penampil::backdrop {
     .lintasan {
         scroll-behavior: auto;
     }
+}
+
+/* Baris tab yang bisa digeser di HP: tanpa bilah geser yang terlihat */
+.tanpa-bilah {
+    scrollbar-width: none;
+}
+
+.tanpa-bilah::-webkit-scrollbar {
+    display: none;
 }

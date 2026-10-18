@@ -1,4 +1,40 @@
+@use('App\Models\Pengaturan')
+@use('Illuminate\Support\Str')
+
 <x-layouts.publik :judul="$berita->judul" :deskripsi="$berita->cuplikan(200)" :gambar="$berita->urlBerkas('gambar')">
+    <x-slot:kepala>
+        @if ($pratinjau ?? false)
+            <meta name="robots" content="noindex, nofollow">
+        @else
+            {{-- Data terstruktur agar berita tampil rapi di hasil pencarian Google --}}
+            <script type="application/ld+json">{!! json_encode(array_filter([
+                '@context' => 'https://schema.org',
+                '@type' => 'NewsArticle',
+                'headline' => Str::limit($berita->judul, 110, ''),
+                'description' => $berita->cuplikan(200),
+                'image' => $berita->urlBerkas('gambar') ? [$berita->urlBerkas('gambar')] : null,
+                'datePublished' => $berita->terbit_pada?->toIso8601String(),
+                'dateModified' => $berita->updated_at?->toIso8601String(),
+                'author' => ['@type' => $berita->penulis ? 'Person' : 'Organization', 'name' => $berita->penulis ?: Pengaturan::ambil('nama_sekolah')],
+                'publisher' => array_filter(['@type' => 'Organization', 'name' => Pengaturan::ambil('nama_sekolah'), 'logo' => Pengaturan::urlBerkas('logo_sekolah') ? ['@type' => 'ImageObject', 'url' => Pengaturan::urlBerkas('logo_sekolah')] : null]),
+                'mainEntityOfPage' => $berita->url(),
+            ]), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
+        @endif
+    </x-slot:kepala>
+
+    @if ($pratinjau ?? false)
+        @php
+            $statusPratinjau = match (true) {
+                $berita->status !== 'terbit' => 'berita ini masih draf dan belum terlihat pengunjung.',
+                $berita->terbit_pada?->isFuture() => 'berita ini terjadwal terbit '.$berita->terbit_pada->translatedFormat('j F Y, H.i').'.',
+                default => 'berita ini sudah terbit.',
+            };
+        @endphp
+        <div class="sticky top-16 z-20 border-b border-amber-200 bg-amber-50" role="status">
+            <p class="wadah py-3 text-sm font-bold text-amber-900">Pratinjau: {{ $statusPratinjau }}</p>
+        </div>
+    @endif
+
     <article>
         <header class="border-b border-garis bg-white">
             <div class="wadah max-w-3xl py-8 sm:py-10">
@@ -14,7 +50,9 @@
                 <h1 class="judul-halaman">{{ $berita->judul }}</h1>
                 <p class="mt-4 text-sm text-slate-600">
                     Ditulis oleh <b class="text-slate-800">{{ $berita->namaPenulis() }}</b>
-                    · <time datetime="{{ $berita->terbit_pada->toIso8601String() }}">{{ $berita->terbit_pada->translatedFormat('l, j F Y') }}</time>
+                    @if ($berita->terbit_pada)
+                        · <time datetime="{{ $berita->terbit_pada->toIso8601String() }}">{{ $berita->terbit_pada->translatedFormat('l, j F Y') }}</time>
+                    @endif
                 </p>
             </div>
         </header>
@@ -31,11 +69,13 @@
 
             <x-isi :html="$berita->isi" />
 
+            @unless ($pratinjau ?? false)
             <div class="mt-10 flex flex-wrap items-center gap-3 border-t border-garis pt-6">
                 <span class="text-sm font-bold text-slate-700">Bagikan:</span>
                 <a href="https://wa.me/?text={{ rawurlencode($berita->judul.' '.$berita->url()) }}" target="_blank" rel="noopener" class="tombol-kedua">WhatsApp</a>
                 <a href="https://www.facebook.com/sharer/sharer.php?u={{ rawurlencode($berita->url()) }}" target="_blank" rel="noopener" class="tombol-kedua">Facebook</a>
             </div>
+            @endunless
         </div>
     </article>
 

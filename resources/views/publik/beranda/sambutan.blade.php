@@ -3,7 +3,7 @@
 @php
     $nama = Pengaturan::ambil('kepsek_nama');
     $foto = Pengaturan::urlBerkas('kepsek_foto');
-    $inisial = mb_strtoupper(collect(preg_split('/\s+/', trim(preg_replace('/[^\p{L}\s]/u', '', explode(',', $nama)[0]))))->filter()->take(2)->map(fn ($kata) => mb_substr($kata, 0, 1))->implode(''));
+    $inisial = \App\Support\Teks::inisial($nama);
 @endphp
 
 <div class="wadah grid items-center gap-10 md:grid-cols-[minmax(0,18rem)_1fr] lg:gap-16">

@@ -77,8 +77,13 @@
                         @endif
                     @endforeach
                 </nav>
+                <span class="ml-1 flex items-center">
+                    <a href="{{ route('cari') }}" class="grid h-11 w-11 place-items-center rounded-lg text-slate-600 hover:bg-abu hover:text-slate-900" aria-label="Cari di website">
+                        <x-heroicon-o-magnifying-glass class="h-5 w-5" aria-hidden="true" />
+                    </a>
+                </span>
                 @if ($tombolKepala)
-                    <span class="ml-3 flex items-center">
+                    <span class="ml-2 flex items-center">
                         <a href="{{ $tombolKepala['url'] }}" class="tombol-utama whitespace-nowrap" @if ($tombolKepala['keluar']) target="_blank" rel="noopener" @endif>{{ $tombolKepala['label'] }}</a>
                     </span>
                 @endif
@@ -91,7 +96,14 @@
                     <span class="group-open:hidden">Menu</span>
                     <span class="hidden group-open:inline">Tutup</span>
                 </summary>
-                <nav class="absolute inset-x-0 top-16 max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-garis bg-white px-4 pb-4 pt-2 shadow-lg" aria-label="Menu utama">
+                <nav class="absolute inset-x-0 top-16 max-h-[calc(100dvh-4rem)] overflow-y-auto border-b border-garis bg-white px-4 pb-4 pt-3 shadow-lg" aria-label="Menu utama">
+                    <form method="get" action="{{ route('cari') }}" role="search" class="mb-2 flex gap-2">
+                        <label for="cari-hp" class="sr-only">Cari di website</label>
+                        <input type="search" id="cari-hp" name="q" minlength="3" maxlength="100" required placeholder="Cari di website" class="isian">
+                        <button type="submit" class="tombol-kedua shrink-0 px-3" aria-label="Cari">
+                            <x-heroicon-m-magnifying-glass class="h-5 w-5" aria-hidden="true" />
+                        </button>
+                    </form>
                     @foreach ($menuUtama as $item)
                         @if ($item['anak'])
                             <p class="mt-3 px-3 pb-1 text-xs font-bold text-slate-500">{{ $item['label'] }}</p>

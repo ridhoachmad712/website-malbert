@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\CatatAktivitas;
 use App\Models\Concerns\HapusBerkas;
 use App\Models\Concerns\PunyaSlug;
+use App\Support\Teks;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -65,9 +66,7 @@ class Guru extends Model
     /** Huruf awal nama sebagai pengganti foto, misalnya "SR" untuk Siti Rahmah, S.Pd. */
     public function inisial(): string
     {
-        $nama = preg_replace('/[^\p{L}\s]/u', '', explode(',', $this->nama)[0]);
-
-        return mb_strtoupper(collect(preg_split('/\s+/', trim($nama)))->filter()->take(2)->map(fn ($kata) => mb_substr($kata, 0, 1))->implode(''));
+        return Teks::inisial($this->nama);
     }
 
     /** @return array<int, array{label: string, url: string}> */

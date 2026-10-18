@@ -46,7 +46,7 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
                 NavigationGroup::make('Konten'),
                 NavigationGroup::make('Profil Sekolah'),
-                NavigationGroup::make('Program & SPMB'),
+                NavigationGroup::make('Program & Layanan'),
                 NavigationGroup::make('Pengaturan'),
             ])
             ->navigationItems([

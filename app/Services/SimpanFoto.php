@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Support\Foto;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -10,6 +11,7 @@ use Intervention\Image\Laravel\Facades\Image;
 /**
  * Menyimpan foto unggahan setelah dikecilkan agar hemat ruang hosting.
  * Foto dikodekan ulang sebagai JPG, sehingga data EXIF (termasuk lokasi GPS) ikut terbuang.
+ * Versi kecil WebP dibuat sekaligus untuk kartu dan galeri (lihat App\Support\Foto).
  */
 class SimpanFoto
 {
@@ -27,6 +29,7 @@ class SimpanFoto
 
         $gambar = Image::decode($file->getRealPath())->scaleDown($sisiTerpanjang, $sisiTerpanjang);
         Storage::disk('public')->put($path, (string) $gambar->encodeUsingFileExtension('jpg', quality: 80));
+        Foto::buatKecil($path);
 
         return $path;
     }

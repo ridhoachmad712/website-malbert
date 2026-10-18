@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Models\Agenda;
 use App\Models\Album;
+use App\Models\Alumni;
 use App\Models\Berita;
+use App\Models\DokumenAnggaran;
+use App\Models\Ekstrakurikuler;
 use App\Models\Guru;
 use App\Models\Halaman;
 use App\Models\Pengaturan;
 use App\Models\Pesan;
 use App\Models\Prestasi;
+use App\Models\Sarana;
 use App\Models\Unduhan;
 use App\Support\BagianBeranda;
 use Closure;
@@ -144,6 +148,107 @@ class PublikController extends Controller
         return view('publik.unduhan', [
             'kelompok' => Unduhan::terbit()->orderBy('urutan')->orderBy('judul')->get()
                 ->groupBy(fn (Unduhan $unduhan) => $unduhan->kategori ?: 'Lainnya'),
+        ]);
+    }
+
+    public function ekskul(): View
+    {
+        return view('publik.ekskul', ['ekskul' => Ekstrakurikuler::tampil()->get()]);
+    }
+
+    public function ekskulDetail(Ekstrakurikuler $ekstrakurikuler): View
+    {
+        abort_unless($ekstrakurikuler->tampil, 404);
+
+        return view('publik.ekskul-detail', [
+            'ekskul' => $ekstrakurikuler->load(['album' => fn ($query) => $query->where('terbit', true)->with('foto')]),
+            'lainnya' => Ekstrakurikuler::tampil()->whereKeyNot($ekstrakurikuler->id)->get(),
+        ]);
+    }
+
+    public function sarana(): View
+    {
+        return view('publik.sarana', ['sarana' => Sarana::tampil()->get()]);
+    }
+
+    public function transparansi(Request $request): View
+    {
+        $daftarTahun = DokumenAnggaran::terbit()->distinct()->orderByDesc('tahun')->pluck('tahun');
+        $tahun = $daftarTahun->contains((int) $request->query('tahun')) ? (int) $request->query('tahun') : $daftarTahun->first();
+
+        $dokumen = $tahun
+            ? DokumenAnggaran::terbit()->where('tahun', $tahun)->orderByRaw("CASE jenis WHEN 'rkas' THEN 0 WHEN 'realisasi_tahap1' THEN 1 WHEN 'realisasi_tahap2' THEN 2 WHEN 'realisasi_tahunan' THEN 3 WHEN 'pertanggungjawaban' THEN 4 ELSE 5 END")->orderBy('tanggal')->get()
+            : collect();
+
+        return view('publik.transparansi', [
+            'daftarTahun' => $daftarTahun,
+            'tahun' => $tahun,
+            'dokumen' => $dokumen,
+        ]);
+    }
+
+    public function alumni(): View
+    {
+        return view('publik.alumni', ['alumni' => Alumni::tampil()->get()]);
+    }
+
+    public function kirimAlumni(Request $request): RedirectResponse
+    {
+        abort_unless(Pengaturan::aktif('alumni_formulir_tampil'), 404);
+
+        if (filled($request->input('situs'))) {
+            return redirect()->route('alumni')->with('terkirim', true);
+        }
+
+        $data = $request->validate([
+            'nama' => ['required', 'string', 'max:150'],
+            'tahun_lulus' => ['required', 'integer', 'min:1950', 'max:'.now()->year],
+            'kegiatan' => ['nullable', 'string', 'max:200'],
+            'cerita' => ['nullable', 'string', 'max:1500'],
+            'kontak' => ['nullable', 'string', 'max:120'],
+            'setuju_tampil' => ['nullable', 'boolean'],
+        ], [], ['tahun_lulus' => 'tahun lulus', 'cerita' => 'cerita']);
+
+        Alumni::create($data + ['sumber' => 'formulir', 'status' => 'menunggu', 'setuju_tampil' => (bool) ($data['setuju_tampil'] ?? false)]);
+
+        return redirect()->route('alumni')->with('terkirim', true);
+    }
+
+    public function cari(Request $request): View
+    {
+        $kata = trim(mb_substr((string) $request->query('q'), 0, 100));
+        $hasil = collect();
+
+        if (mb_strlen($kata) >= 3) {
+            $pola = '%'.addcslashes($kata, '%_\\').'%';
+            $cocok = fn ($query, array $kolom) => $query->where(fn ($query) => collect($kolom)->each(fn ($k) => $query->orWhere($k, 'like', $pola)));
+
+            $hasil = collect()
+                ->merge($cocok(Berita::terbit(), ['judul', 'ringkasan', 'isi'])->latest('terbit_pada')->limit(20)->get()
+                    ->map(fn ($item) => ['jenis' => $item->namaKategori(), 'judul' => $item->judul, 'url' => $item->url(), 'cuplikan' => $item->cuplikan(), 'tanggal' => $item->terbit_pada]))
+                ->merge($cocok(Halaman::terbit(), ['judul', 'ringkasan', 'isi'])->limit(10)->get()
+                    ->map(fn ($item) => ['jenis' => 'Halaman', 'judul' => $item->judul, 'url' => $item->url(), 'cuplikan' => $item->ringkasan, 'tanggal' => null]))
+                ->merge($cocok(Agenda::query(), ['judul', 'keterangan', 'tempat'])->orderByDesc('mulai')->limit(10)->get()
+                    ->map(fn ($item) => ['jenis' => 'Agenda', 'judul' => $item->judul, 'url' => route('agenda'), 'cuplikan' => $item->tanggalTeks(), 'tanggal' => null]))
+                ->merge($cocok(Ekstrakurikuler::where('tampil', true), ['nama', 'ringkasan', 'deskripsi'])->limit(10)->get()
+                    ->map(fn ($item) => ['jenis' => 'Ekstrakurikuler', 'judul' => $item->nama, 'url' => $item->url(), 'cuplikan' => $item->ringkasan, 'tanggal' => null]))
+                ->merge($cocok(Guru::where('tampil', true), ['nama', 'jabatan'])->limit(10)->get()
+                    ->map(fn ($item) => ['jenis' => 'Guru dan tendik', 'judul' => $item->nama, 'url' => $item->url(), 'cuplikan' => $item->jabatan, 'tanggal' => null]))
+                ->merge($cocok(Unduhan::terbit(), ['judul', 'keterangan', 'kategori'])->limit(10)->get()
+                    ->map(fn ($item) => ['jenis' => 'Unduhan', 'judul' => $item->judul, 'url' => $item->url(), 'cuplikan' => $item->keterangan, 'tanggal' => null]))
+                ->merge($cocok(DokumenAnggaran::terbit(), ['judul', 'keterangan', 'periode'])->limit(10)->get()
+                    ->map(fn ($item) => ['jenis' => 'Transparansi anggaran', 'judul' => $item->judul, 'url' => route('transparansi', ['tahun' => $item->tahun]), 'cuplikan' => $item->namaJenis(), 'tanggal' => null]));
+        }
+
+        return view('publik.cari', ['kata' => $kata, 'hasil' => $hasil]);
+    }
+
+    public function pratinjauBerita(Berita $berita): View
+    {
+        return view('publik.berita-detail', [
+            'berita' => $berita,
+            'lainnya' => collect(),
+            'pratinjau' => true,
         ]);
     }
 
